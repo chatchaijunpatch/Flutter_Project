@@ -1,7 +1,6 @@
 // ignore_for_file: prefer_const_constructors, non_constant_identifier_names, sized_box_for_whitespace, sort_child_properties_last
 
 import 'dart:convert';
-import 'dart:js';
 import 'dart:typed_data';
 import 'dart:ui';
 import 'package:flutter/material.dart';
@@ -105,8 +104,9 @@ class _HomeState extends State<Home> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              // Image(image: AssetImage("assets/dark.jpg")),
               Image.asset(
-                "images/dark.jpg",
+                "assets/dark.jpg",
                 scale: 1.5,
               ),
               SizedBox(height: 30),
