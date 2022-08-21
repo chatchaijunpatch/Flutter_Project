@@ -8,11 +8,14 @@ import 'package:project_form/screen/formscreen.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
+        name: "student-socre-project",
       options: FirebaseOptions(
-          apiKey: "",
+          apiKey: "AAAAXh3WLzc:APA91bHHhrXlOGuxYl3Eeyq_fo1pyw9SmVklmRhfqwFR5btkDres9BvcKgep2CghcDC091z0NOrqmtcUfaFj1iUxfBBRNrdL7vjG0z2jP_q78xo3JeoMsJEVRiYUqQxF6DGn65sK8meL",
           appId: "1:404227501879:android:b9f62c4775ee4e614b34b2",
           messagingSenderId: "404227501879",
-          projectId: "student-socre-project"));
+          projectId: "student-socre-project",
+          storageBucket: "gs://student-socre-project.appspot.com/",
+          ));
   runApp(const MyApp());
 }
 

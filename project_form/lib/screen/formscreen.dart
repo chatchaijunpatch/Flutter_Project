@@ -1,10 +1,16 @@
-// ignore_for_file: unnecessary_string_interpolations, avoid_print
+// ignore_for_file: unnecessary_string_interpolations, avoid_print, prefer_const_declarations, await_only_futures
+
+import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
+import 'package:project_form/model/storage_service.dart';
 import 'package:project_form/model/student.dart';
+
+import '../service/service.dart';
 
 class FormScreen extends StatefulWidget {
   FormScreen({Key? key}) : super(key: key);
@@ -15,10 +21,12 @@ class FormScreen extends StatefulWidget {
 
 class _FormScreenState extends State<FormScreen> {
   final formkey = GlobalKey<FormState>();
+  var pathimg = "";
+  final Storage storage = Storage();
   final Future<FirebaseApp> firebase =
       Firebase.initializeApp(); // เตรียม firebase
-  CollectionReference _studentCollection =
-      FirebaseFirestore.instance.collection("students");
+  // CollectionReference _studentCollection =
+  //     FirebaseFirestore.instance.collection("students");
   Student myStudent = Student();
   @override
   Widget build(BuildContext context) {
@@ -101,6 +109,55 @@ class _FormScreenState extends State<FormScreen> {
                             }),
                             keyboardType: TextInputType.number,
                           ),
+                           SizedBox(
+                            height: 15,
+                          ),
+                          Center(
+                            child: ElevatedButton(onPressed: ()async{
+                              final results = await FilePicker.platform.pickFiles(
+                                allowMultiple: false,
+                                type: FileType.custom,
+                                allowedExtensions: ['png','jpg']
+                              );
+                              if(results == null){
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(content: Text("No file select"),),
+                                );
+                                return null;
+                              }
+                              final path = results.files.single.path!;
+                              final fileName = results.files.single.name;
+                              myStudent.storage.fileName = fileName;
+                              myStudent.storage.filePath = path;
+                               myStudent.storage.filePath = path;
+                              
+                              setState(() {
+                                pathimg = path;
+                              });
+                              // storage.uploadFile(path,fileName).then((value) => print("Done"),);
+                              // print(path);
+                              // print(fileName);
+                              print(myStudent.storage.filePath+"/"+myStudent.storage.fileName);
+                          }, child: Text("upload File")),
+                          ),
+                          SizedBox(
+                            height: 15,
+                          ),
+                          Center(child:
+                          Image.file(
+                            File(pathimg),
+                            width: 200,
+                            height: 200,
+                             errorBuilder: ( context, error, stackTrace,){
+                              return Image(image: AssetImage('assets/photo.png'),
+                              width: 200,
+                              
+                              height: 200,);
+                             }
+                          ),),
+                          SizedBox(
+                            height: 15,
+                          ),
                           SizedBox(
                             width: double.infinity,
                             child: ElevatedButton(
@@ -116,13 +173,18 @@ class _FormScreenState extends State<FormScreen> {
                                   // print("${myStudent.lname}");
                                   // print('${myStudent.email}');
                                   // print("${myStudent.score}");
-                                  await _studentCollection.add({
-                                    "fname": myStudent.fname,
-                                    "lname": myStudent.lname,
-                                    "email": myStudent.email,
-                                    "score": myStudent.score,
-                                  });
+                                  // await uploadFile(myStudent.storage.filePath,myStudent.storage.fileName);
+                                  // await _studentCollection.add({
+                                  //   "fname": myStudent.fname,
+                                  //   "lname": myStudent.lname,
+                                  //   "email": myStudent.email,
+                                  //   "score": myStudent.score,
+                                  // });
+                                  await uploadProfile(myStudent);
                                   formkey.currentState?.reset();
+                                  setState(() {
+                                    pathimg = "";
+                                  });
                                 }
                               },
                             ),

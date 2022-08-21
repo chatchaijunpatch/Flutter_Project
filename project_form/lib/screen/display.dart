@@ -10,8 +10,10 @@ class DisplayScreen extends StatefulWidget {
 
 class _DisplayScreenState extends State<DisplayScreen> {
   final  Stream<QuerySnapshot> _students = FirebaseFirestore.instance.collection("students").snapshots();
+  final usersRef = FirebaseFirestore.instance.collection("students");
   @override
   Widget build(BuildContext context) {
+    print(_students);
     return Scaffold(
       appBar: AppBar(
         title: Text("รายงานคะแนนสอบ"),
@@ -29,13 +31,14 @@ class _DisplayScreenState extends State<DisplayScreen> {
               return Container(
                 child: ListTile(
                   leading: CircleAvatar(
-                    radius: 30,
+                    radius:40,
                     child: FittedBox(child: Text(document['score'])),
                   ),
                   title: Text(document['fname'] + document['lname']),
-                  subtitle: Text(document['email']),
+                  // subtitle: Text(usersRef.doc(document.id).id),
                 ),
               );
+              
             }).toList(),
           );
         },
